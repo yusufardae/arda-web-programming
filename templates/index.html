@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="INSPIRO" />
+    <meta name="description" content="Themeforest Template Polo, html template">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Document title -->
+    <title>MARS - The Ultimate Fitness Club</title>
+    <!-- Stylesheets & Fonts -->
+    <link href="css/style.css" rel="stylesheet">
+<link href="css/plugins.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Body Inner -->
+    <div class="body-inner">
+        <!-- Header -->
+        <header id="header" data-transparent="true" class="dark">
+            <div class="header-inner">
+                <div class="container">
+                    <!--Logo-->
+                    <div id="logo"> <a href="{{ url_for('index') }}"><span class="logo-default">MARS</span><span
+                                class="logo-dark">MARS</span></a> </div>
+                    <!--End: Logo-->
+                    <!-- Search -->
+                    <div id="search"><a id="btn-search-close" class="btn-search-close" aria-label="Close search form"><i
+                                class="icon-x"></i></a>
+                        <form class="search-form" action="search-results-page.html" method="get">
+                            <input class="form-control" name="q" type="text" placeholder="Type & Search..." />
+                            <span class="text-muted">Start typing & press "Enter" or "ESC" to close</span>
+                        </form>
+                    </div>
+                    <!-- end: search -->
+                    <!--Navigation Resposnive Trigger-->
+                    <div id="mainMenu-trigger"> <a class="lines-button x"><span class="lines"></span></a> </div>
+                    <!--end: Navigation Resposnive Trigger-->
+                    <!--Navigation-->
+                    <div id="mainMenu">
+                        <div class="container">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                                    <li><a href="{{ url_for('login') }}">Log In</a></li>
+                                    <li><a href="{{ url_for('joinus') }}" class="btn btn-danger btn-explore-more">Join Us</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!--end: Navigation-->
+                </div>
+            </div>
+        </header>
+        <!-- end: Header -->
+        <!-- Inspiro Slider -->
+        <div id="slider" class="inspiro-slider slider-fullscreen dots-creative" data-height-xs="360">
+            <!-- Slide 1 -->
+            <div class="slide kenburns" data-bg-video="video/Organic_macfit_kaybetmek_yok_64sn_1920_1080_Clean_CUT.mov">
+                <div class="bg-overlay"></div>
+                <div class="container">
+                    <div class="slide-captions text-center">
+                        <!-- Captions -->
+                        <h1 class="text-light">No losing here!</h1>
+                        <h4 class="m-b-20 text-light">Join the club and join the journey of winners!</h4>
+                        <div><a href="{{ url_for('joinus') }}" class="btn btn-danger btn-explore-more" style="padding: 15px 40px !important; font-size: 18px !important; font-weight: 600 !important; min-width: 200px !important; display: inline-block !important;">JOIN US</a></div>
+                        <!-- end: Captions -->
+                    </div>
+        
+                </div>
+            </div>
+            <!-- end: Slide 1 bu-->
+        </div>  
+        <!-- Footer -->
+        <footer id="footer" style="background-color: #1e2022;">
+            <div class="copyright-content" style="min-height: auto !important; padding: 15px 0 !important; background-color: #1e2022 !important;">
+                <div class="container">
+                    <div class="copyright-text text-center" style="color: #e4e6ef; font-size: 12px; margin: 0;">&copy; 2026 MARS - All rights reserved.</div>
+                </div>
+            </div>
+        </footer>
+        <!-- end: Footer -->
+    </div>
+    <!-- end: Body Inner -->
+    <!--Plugins-->
+    <script src="js/jquery.js"></script>
+    <script src="js/plugins.js"></script>
+    <!--Template functions-->
+    <script src="js/functions.js"></script>
+</body>
+
+</html>

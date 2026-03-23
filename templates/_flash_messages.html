@@ -1,0 +1,43 @@
+<style>
+    .mars-flash-stack {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .mars-flash {
+        border: 1px solid transparent;
+        border-left-width: 4px;
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 0.98rem;
+        line-height: 1.5;
+        box-shadow: 0 12px 30px rgba(30, 32, 34, 0.06);
+    }
+
+    .mars-flash-success {
+        background: #f5f7f2;
+        border-color: #d7dfcf;
+        border-left-color: #7f9072;
+        color: #354032;
+    }
+
+    .mars-flash-danger {
+        background: #fff3f3;
+        border-color: #f0caca;
+        border-left-color: #d25b5b;
+        color: #7a2d2d;
+    }
+</style>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="mars-flash-stack">
+    {% for category, message in messages %}
+    <div class="mars-flash mars-flash-{{ 'success' if category == 'success' else 'danger' }}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}

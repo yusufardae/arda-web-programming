@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="INSPIRO" />
+    <meta name="description" content="Themeforest Template Polo, html template">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Document title -->
+    <title>MARS - GYM Selection</title>
+    <!-- Stylesheets & Fonts -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/plugins.css" rel="stylesheet">
+
+    
+</head>
+
+    <style>
+    /* Force only logo text + main menu links to be white on this page */
+    #header #logo .logo-default,
+    #header #logo .logo-dark,
+    #header #mainMenu nav>ul>li>a {
+        color: #ffffff !important;
+    }
+
+    #terms_conditions3 + label a {
+    color: #f70a0a;
+    }
+    
+    .form-check-input:checked{
+        background-color: #f70a0a;
+        border-color: #f70a0a;
+    }
+    </style>
+
+<body>
+    <!-- Body Inner -->
+    <div class="body-inner">
+        <!-- Header -->
+        <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
+            <div class="header-inner">
+                <div class="container">
+                    <!--Logo-->
+                    <div id="logo">
+                        <a href="{{ url_for('index') }}">
+                            <span class="logo-default">MARS</span>
+                            <span class="logo-dark">MARS</span>
+                        </a>
+                    </div>
+                    <!--End: Logo-->
+                    <!--Navigation Resposnive Trigger-->
+                    <div id="mainMenu-trigger">
+                        <a class="lines-button x"><span class="lines"></span></a>
+                    </div>
+                    <!--end: Navigation Resposnive Trigger-->
+                    <!--Navigation-->
+                    <div id="mainMenu">
+                        <div class="container">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!--end: Navigation-->
+                </div>
+            </div>
+        </header>
+        <!-- end: Header -->
+        <!-- Page title -->
+        <section id="page-title" class="text-light background-theme">
+            <div class="container">
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">Home</a> </li>
+                        <li><a href="#">Join Us</a> </li>
+                    </ul>
+                </div>
+                <div class="page-title">
+                    <h1>Choose the GYM that’s right for you.</h1>
+                </div>
+            </div>
+        </section>
+        <!-- end: Page title -->
+        <!-- Content -->
+
+        <!-- Stats -->
+        <section style="padding: 30px 0 !important;">
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-4">
+                        <!-- Stats item -->
+                        <div class="text-center">
+                            <span class="display-4 d-block text-dark mb-2">2.5k+</span>
+                            <p class="lead">Trusted by 2.5k member</p>
+                        </div>
+                        <!-- end: Stats item-->
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Stats -->
+                        <div class="text-center">
+                            <span class="display-4 d-block text-dark mb-2">50+</span>
+                            <p class="lead">Branches across the country</p>
+                        </div>
+                        <!-- end: Stats item-->
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Stats -->
+                        <div class="text-center">
+                            <span class="display-4 d-block text-dark mb-2">250+</span>
+                            <p class="lead">250+ Personal trainers</p>
+                        </div>
+                        <!-- end: Stats item -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end: Stats -->
+
+        <section id="page-content" class="p-b-0">
+            <div class="container">
+                <div class="row m-b-40">
+                    <div class="sidebar sticky-sidebar col-lg-4">
+                        <h2 class="m-b-30">uGym</h2>
+                        <div style="background: linear-gradient(135deg, #1f1f1f 0%, #d1d1d1 100%); padding: 18px; border-radius: 12px; margin-bottom: 20px; color: white; position: relative;">
+                            <div style="position: absolute; top: -12px; right: 15px; background: #f70a0a; color: #ffffff; padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold;">⭐ DISCOUNT FOR YOU</div>
+                            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Joining-Fee For Once</div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <div style="font-size: 36px; font-weight: bold;">£10</div>
+                            </div>
+                            <div style="font-size: 12px; opacity: 0.85;">Special Price • Save 40%</div>
+                        </div>
+                        <div class="project-description">
+                            <h3>A calm, well-equipped gym near the city center, popular with mature members. Easy access, professional trainers, and a comfortable atmosphere focused on health and longevity.</h3>
+                        </div>
+                        <div> <a href="{{ url_for('uGym') }}" class="btn btn-roundeded">Select</a></div>
+                    </div>
+                    <div class="col-lg-7 offset-1">
+                        <div class="portfolio-content" data-lightbox="gallery">
+                            <br><br><br><br><br>
+                            <a title="uGym" data-lightbox="gallery-image" href="images/gallery/ugym.png">
+                                <img src="images/gallery/ugym.png" data-animate="fadeInUp" style="border-radius: 12px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.245);">
+                            </a>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end: Content -->
+
+        <!-- Content -->
+        <section id="page-content" class="p-b-0">
+            <div class="container">
+                <div class="row m-b-40">
+                    <div class="sidebar sticky-sidebar col-lg-4">
+                        <h2 class="m-b-30">PowerZone</h2>
+                        <div style="background: linear-gradient(135deg, #1f1f1f 0%, #d1d1d1 100%); padding: 18px; border-radius: 12px; margin-bottom: 20px; color: white; position: relative;">
+                            <div style="font-size: 12px; opacity: 0.9; margin-bottom: 8px;">Joining-Fee For Once</div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                                <div style="font-size: 36px; font-weight: bold;">£30</div>
+                            </div>
+                        </div>
+                        <div class="project-description">
+                            <h3>A high-energy gym on the edge of the city, attracting a younger crowd. Loud music, intense workouts, and a fast-paced environment built for pushing limits and building muscle.</h3>
+                        </div>
+                        <div> <a href="{{ url_for('PowerZone') }}" class="btn btn-roundeded">Select</a></div>
+                    </div>
+                    <div class="col-lg-7 offset-1">
+                        <div class="portfolio-content" data-lightbox="gallery">
+                            <br><br><br><br><br>
+                            <a title="Saiba Chair" data-lightbox="gallery-image" href="images/gym4.jpeg">
+                                <img src="images/gym4.jpeg" data-animate="fadeInUp" style="border-radius: 12px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.245);">
+                            </a>
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- end: Content -->
+         
+        <!-- Footer -->
+        <footer id="footer" style="background-color: #ffffff;">
+            <div class="copyright-content"
+                style="min-height: auto !important; padding: 15px 0 !important; background-color: #ffffff !important;">
+                <div class="container">
+                    <div class="copyright-text text-center" style="color: #1e2022; font-size: 12px; margin: 0;">&copy; 2026 MARS
+                        - All rights reserved.</div>
+                </div>
+            </div>
+        </footer>
+        <!-- end: Footer -->
+    </div>
+
+    <!--Plugins-->
+    <script src="js/jquery.js"></script>
+    <script src="js/plugins.js"></script>
+    <!--Template functions-->
+    <script src="js/functions.js"></script>
+
+</body>
+
+</html>

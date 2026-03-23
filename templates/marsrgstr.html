@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="INSPIRO" />
+    <meta name="description" content="Themeforest Template Polo, html template">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Document title -->
+    <title>MARS - Register</title>
+    <!-- Stylesheets & Fonts -->
+    <link href="css/style.css" rel="stylesheet">
+<link href="css/plugins.css" rel="stylesheet">
+
+    
+</head>
+
+    <style>
+    /* Force only logo text + main menu links to be white on this page */
+    #header #logo .logo-default,
+    #header #logo .logo-dark,
+    #header #mainMenu nav>ul>li>a {
+        color: #ffffff !important;
+    }
+
+    #terms_conditions3 + label a {
+    color: #f70a0a;
+    }
+    
+    .form-check-input:checked{
+        background-color: #f70a0a;
+        border-color: #f70a0a;
+    }
+    </style>
+
+<body>
+    <!-- Body Inner -->
+    <div class="body-inner">
+        <!-- Header -->
+        <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
+            <div class="header-inner">
+                <div class="container">
+                    <!--Logo-->
+                    <div id="logo">
+                        <a href="{{ url_for('index') }}">
+                            <span class="logo-default">MARS</span>
+                            <span class="logo-dark">MARS</span>
+                        </a>
+                    </div>
+                    <!--End: Logo-->
+                    <!--Navigation Resposnive Trigger-->
+                    <div id="mainMenu-trigger">
+                        <a class="lines-button x"><span class="lines"></span></a>
+                    </div>
+                    <!--end: Navigation Resposnive Trigger-->
+                    <!--Navigation-->
+                    <div id="mainMenu">
+                        <div class="container">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                                    <li><a href="#">Log In</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!--end: Navigation-->
+                </div>
+            </div>
+        </header>
+        <!-- end: Header -->
+        <!-- Page title -->
+        <section id="page-title" class="text-light background-theme">
+            <div class="container">
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">Home</a> </li>
+                        <li><a href="#">Join Us</a> </li>
+                    </ul>
+                </div>
+                <div class="page-title">
+                    <h1>You’re ready to be part of us!</h1>
+                </div>
+            </div>
+        </section>
+        <!-- end: Page title -->
+        <!-- Section -->
+        <section class="pt-5 pb-5">
+            <div class="container-fluid d-flex flex-column">
+                <div class="row align-items-center min-vh-100">
+                    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                        <h3>Register New Account</h3>
+                        <p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
+
+                        {% include '_flash_messages.html' %}
+
+                        <form id="form1" class="form-validate mt-5" action="{{ url_for('joinus') }}" method="post">
+                            <div class="h5 mb-4">Account details</div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Enter your Name" value="{{ form_data.get('name', '') }}" required="">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="surname">Surname</label>
+                                    <input type="text" class="form-control" name="surname" placeholder="Enter your Surname" value="{{ form_data.get('surname', '') }}" required="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="password">Password</label>
+                                    <div class="input-group show-hide-password">
+                                        <input class="form-control" id="password" name="password" placeholder="Enter password" type="password" autocomplete="new-password" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="password2">Confirm Password</label>
+                                    <div class="input-group show-hide-password">
+                                        <input class="form-control" id="password2" name="password2" placeholder="Confirm password" type="password" autocomplete="new-password" required="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="gender">Gender</label>
+                                    <select class="form-select" name="gender" required="">
+                                                <option value="">Select your gender</option>
+                                                <option value="Female" {% if form_data.get('gender') == 'Female' %}selected{% endif %}>Female</option>
+                                                <option value="Male" {% if form_data.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                                                <option value="Rather not say" {% if form_data.get('gender') == 'Rather not say' %}selected{% endif %}>Rather not say</option>
+                                            </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="gender">Date of Birth</label>
+                                    <input class="form-control" type="date" name="dateofbirth" value="{{ form_data.get('dateofbirth', '') }}" required="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email address</label>
+                                    <input type="email" class="form-control" name="email" placeholder="Enter your email" value="{{ form_data.get('email', '') }}" required="">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="telephone">Telephone</label>
+                                    <input class="form-control" type="tel" name="telephone" placeholder="Enter your Telephone number" value="{{ form_data.get('telephone', '') }}" required="">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-check">
+                                <input type="checkbox" name="terms_conditions" id="terms_conditions" class="form-check-input" value="1" {% if form_data.get('terms_conditions') %}checked{% endif %} required="">
+                                <label class="custom-control-label" for="terms_conditions">By checkingthis option, you agree to acceot with the <a href="#" style="color: #f70a0a !important;">Terms and Conditions</a>.</label>
+                            </div>
+                            <button type="submit" class="btn m-t-30 mt-3">Submit</button>
+                        </form>
+                        <div class="mt-4"><small>Already have an acocunt?</small> <a href="{{ url_for('login') }}" class="small fw-bold" style="color: #f70a0a !important;">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+    </section>
+    <!-- end: Section -->
+        <!-- Footer -->
+        <footer id="footer" style="background-color: #ffffff;">
+            <div class="copyright-content"
+                style="min-height: auto !important; padding: 15px 0 !important; background-color: #ffffff !important;">
+                <div class="container">
+                    <div class="copyright-text text-center" style="color: #1e2022; font-size: 12px; margin: 0;">&copy; 2026 MARS
+                        - All rights reserved.</div>
+                </div>
+            </div>
+        </footer>
+        <!-- end: Footer -->
+    </div>
+</body>
+
+</html>

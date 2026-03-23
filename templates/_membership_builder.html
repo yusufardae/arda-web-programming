@@ -1,0 +1,243 @@
+<style>
+    .membership-table th,
+    .membership-table td {
+        border-width: 2px !important;
+        padding: 16px !important;
+        font-size: 1.05rem;
+    }
+
+    .membership-table {
+        overflow: hidden;
+        border-radius: 18px;
+        box-shadow: 0 16px 36px rgba(30, 32, 34, 0.08);
+        background: #ffffff;
+        margin-bottom: 30px;
+    }
+
+    .membership-table thead th {
+        background: #f8f8f8;
+    }
+
+    .membership-option {
+        border: 1px solid rgba(30, 32, 34, 0.12);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        background: #ffffff;
+    }
+
+    .membership-option:hover {
+        border-color: rgba(247, 10, 10, 0.45);
+        box-shadow: 0 12px 24px rgba(30, 32, 34, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .membership-option input {
+        margin-right: 12px;
+    }
+
+    .summary-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(30, 32, 34, 0.08);
+    }
+
+    .summary-line:last-child {
+        border-bottom: 0;
+    }
+</style>
+
+<section id="content">
+    <div class="container">
+        {% include '_flash_messages.html' %}
+
+        <div class="heading-text heading-line text-center pb-4">
+            <h4>Membership Plans</h4>
+            <p style="max-width: 760px; margin: 0 auto;">{{ club.discount_copy }}</p>
+        </div>
+
+
+
+        <form method="post" id="membership-builder" data-age="{{ user_age }}" data-catalog='{{ club.live_pricing | tojson }}'>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-7">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <h4 class="mb-3">Build Your {{ club.name }} Plan</h4>
+                            <p class="text-muted mb-4">Joining fee is always included. Choose your base membership and any extras you want to add.</p>
+
+                            <div class="mb-4">
+                                <h5 class="mb-3">1. Gym membership</h5>
+                                {% for option in club.gym_options %}
+                                <label class="membership-option d-flex justify-content-between align-items-center">
+                                    <span class="d-flex align-items-center">
+                                        <input type="radio" name="gym_access" value="{{ option.key }}" data-label="{{ option.label }}" {% if form_data.get('gym_access', 'none') == option.key %}checked{% endif %}>
+                                        <span>{{ option.label }}</span>
+                                    </span>
+                                    <strong>£{{ '%.2f' | format(option.price) }}</strong>
+                                </label>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-2">
+                                <h5 class="mb-3">2. Extras</h5>
+                                {% for addon in club.addons %}
+                                <label class="membership-option d-flex justify-content-between align-items-start">
+                                    <span class="d-flex align-items-start">
+                                        <input type="checkbox" name="include_{{ addon.key }}" value="1" data-label="{{ addon.label }}" {% if form_data.get('include_' ~ addon.key) %}checked{% endif %}>
+                                        <span>
+                                            <strong class="d-block">{{ addon.label }}</strong>
+                                            <small class="text-muted">{{ addon.description }}</small>
+                                        </span>
+                                    </span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card" style="position: sticky; top: 24px;">
+                        <div class="card-body p-4">
+                            <span class="badge badge-danger mb-3" style="background-color: #f70a0a;">
+                                {% if club.discount_eligible %}
+                                Age discount active
+                                {% else %}
+                                Standard pricing
+                                {% endif %}
+                            </span>
+                            <h4 class="mb-1">Live Price Summary</h4>
+                            <p class="text-muted mb-4">This total will be saved and shown again on the checkout page.</p>
+
+                            <div class="summary-line">
+                                <span>Joining fee</span>
+                                <strong id="summary-joining">£{{ '%.2f' | format(price_preview.joining_fee) }}</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span id="summary-gym-label">{{ price_preview.gym_access_label }}</span>
+                                <strong id="summary-gym">£{{ '%.2f' | format(price_preview.gym_fee) }}</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span>Swimming pool</span>
+                                <strong id="summary-pool">£{{ '%.2f' | format(price_preview.pool_fee) }}</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span>Classes</span>
+                                <strong id="summary-classes">£{{ '%.2f' | format(price_preview.classes_fee) }}</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span>Massage therapy</span>
+                                <strong id="summary-massage">£{{ '%.2f' | format(price_preview.massage_fee) }}</strong>
+                            </div>
+                            <div class="summary-line">
+                                <span>Physiotherapy</span>
+                                <strong id="summary-physiotherapy">£{{ '%.2f' | format(price_preview.physiotherapy_fee) }}</strong>
+                            </div>
+                            <div class="summary-line text-success">
+                                <span id="summary-discount-label">Age discount{% if price_preview.discount_rate_percent %} ({{ price_preview.discount_rate_percent }}%){% endif %}</span>
+                                <strong id="summary-discount">-£{{ '%.2f' | format(price_preview.discount_amount) }}</strong>
+                            </div>
+                            <div class="summary-line" style="font-size: 1.25rem; border-bottom: 0; padding-top: 18px;">
+                                <span><strong>Total</strong></span>
+                                <strong id="summary-total">£{{ '%.2f' | format(price_preview.total_price) }}</strong>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mt-4" style="background-color: #f70a0a; border-color: #f70a0a;">
+                                Save Selection & Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    (function () {
+        const builder = document.getElementById('membership-builder');
+        if (!builder) {
+            return;
+        }
+
+        const catalog = JSON.parse(builder.dataset.catalog);
+        const age = Number(builder.dataset.age || 0);
+        const summaryFields = {
+            joining: document.getElementById('summary-joining'),
+            gymLabel: document.getElementById('summary-gym-label'),
+            gym: document.getElementById('summary-gym'),
+            pool: document.getElementById('summary-pool'),
+            classes: document.getElementById('summary-classes'),
+            massage: document.getElementById('summary-massage'),
+            physiotherapy: document.getElementById('summary-physiotherapy'),
+            discountLabel: document.getElementById('summary-discount-label'),
+            discount: document.getElementById('summary-discount'),
+            total: document.getElementById('summary-total'),
+        };
+
+        function formatMoney(value) {
+            return `£${Number(value).toFixed(2)}`;
+        }
+
+        function getCheckedRadioValue() {
+            const checked = builder.querySelector('input[name="gym_access"]:checked');
+            return checked ? checked.value : 'none';
+        }
+
+        function getCheckedRadioLabel() {
+            const checked = builder.querySelector('input[name="gym_access"]:checked');
+            return checked ? checked.dataset.label : 'No gym membership';
+        }
+
+        function isChecked(fieldName) {
+            const field = builder.querySelector(`input[name="${fieldName}"]`);
+            return field ? field.checked : false;
+        }
+
+        function getAddonPrice(key, hasGymMembership) {
+            if (!isChecked(`include_${key}`)) {
+                return 0;
+            }
+
+            return hasGymMembership ? catalog.addons[key].with_gym : catalog.addons[key].without_gym;
+        }
+
+        function updateSummary() {
+            const joiningFee = catalog.joining_fee;
+            const gymAccess = getCheckedRadioValue();
+            const gymLabel = getCheckedRadioLabel();
+            const hasGymMembership = gymAccess !== 'none';
+            const gymFee = catalog.gym_options[gymAccess] || 0;
+            const poolFee = getAddonPrice('pool', hasGymMembership);
+            const classesFee = getAddonPrice('classes', hasGymMembership);
+            const massageFee = getAddonPrice('massage', hasGymMembership);
+            const physiotherapyFee = getAddonPrice('physiotherapy', hasGymMembership);
+            const discountRate = age <= 25 ? catalog.discount_rate_under_26 : 0;
+            const discountableTotal = gymFee + poolFee + classesFee;
+            const discountAmount = Number((discountableTotal * discountRate).toFixed(2));
+            const total = Number(
+                (joiningFee + gymFee + poolFee + classesFee + massageFee + physiotherapyFee - discountAmount).toFixed(2)
+            );
+
+            summaryFields.joining.textContent = formatMoney(joiningFee);
+            summaryFields.gymLabel.textContent = gymLabel;
+            summaryFields.gym.textContent = formatMoney(gymFee);
+            summaryFields.pool.textContent = formatMoney(poolFee);
+            summaryFields.classes.textContent = formatMoney(classesFee);
+            summaryFields.massage.textContent = formatMoney(massageFee);
+            summaryFields.physiotherapy.textContent = formatMoney(physiotherapyFee);
+            summaryFields.discountLabel.textContent = discountRate > 0
+                ? `Age discount (${Math.round(discountRate * 100)}%)`
+                : 'Age discount';
+            summaryFields.discount.textContent = `-${formatMoney(discountAmount)}`;
+            summaryFields.total.textContent = formatMoney(total);
+        }
+
+        builder.addEventListener('change', updateSummary);
+        updateSummary();
+    }());
+</script>

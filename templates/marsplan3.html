@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="INSPIRO" />
+    <meta name="description" content="Themeforest Template Polo, html template">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Document title -->
+    <title>MARS - Plan Selection</title>
+    <!-- Stylesheets & Fonts -->
+    <link href="css/style.css" rel="stylesheet">
+<link href="css/plugins.css" rel="stylesheet">
+
+    
+</head>
+
+    <style>
+    /* Force only logo text + main menu links to be white on this page */
+    #header #logo .logo-default,
+    #header #logo .logo-dark,
+    #header #mainMenu nav>ul>li>a {
+        color: #ffffff !important;
+    }
+
+    #terms_conditions3 + label a {
+    color: #f70a0a;
+    }
+    
+    .form-check-input:checked{
+        background-color: #f70a0a;
+        border-color: #f70a0a;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn-light:hover {
+        background-color: #f70a0a !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(247, 10, 10, 0.3);
+    }
+
+    .btn-primary:hover {
+        background-color: #d60808 !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(247, 10, 10, 0.3);
+    }
+
+    </style>
+
+<body>
+    <!-- Body Inner -->
+    <div class="body-inner">
+        <!-- Header -->
+        <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
+            <div class="header-inner">
+                <div class="container">
+                    <!--Logo-->
+                    <div id="logo">
+                        <a href="{{ url_for('index') }}">
+                            <span class="logo-default">MARS</span>
+                            <span class="logo-dark">MARS</span>
+                        </a>
+                    </div>
+                    <!--End: Logo-->
+                    <!--Navigation Resposnive Trigger-->
+                    <div id="mainMenu-trigger">
+                        <a class="lines-button x"><span class="lines"></span></a>
+                    </div>
+                    <!--end: Navigation Resposnive Trigger-->
+                    <!--Navigation-->
+                    <div id="mainMenu">
+                        <div class="container">
+                            <nav>
+                                <ul>
+                                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!--end: Navigation-->
+                </div>
+            </div>
+        </header>
+        <!-- end: Header -->
+        <!-- Page title -->
+        <section id="page-title" class="text-light background-theme">
+            <div class="container">
+                <div class="breadcrumb">
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">Home</a> </li>
+                        <li><a href="#">Join Us</a> </li>
+                    </ul>
+                </div>
+                <div class="page-title">
+                    <h1>Choose your ideal membership plan!</h1>
+                </div>
+            </div>
+        </section>
+        <!-- end: Page title -->
+
+        <div class="heading-text text-center">
+                    <h4 style="padding-top: 140px;">Wellcome To uGym</h4>
+                </div>
+
+        <!-- Content -->
+        <section id="page-content">
+            <div class="container">
+                <hr class="space">
+                    <!-- Portfolio: Image Zoom -->
+                <div class="portfolio-3-columns">
+                    <!-- portfolio item -->
+                    <div class="portfolio-item img-zoom ct-photography ct-media ct-branding ct-Media">
+                        <div class="portfolio-item-wrap">
+                            <div class="portfolio-image">
+                                <a href="#"><img src="images/gallery/powerzn.jpg" alt=""></a>
+                            </div>
+                            <div class="portfolio-description">
+                                <a href="portfolio-page-grid-gallery.html">
+                                    <h3>Feel Better</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: portfolio item -->
+                    <!-- portfolio item -->
+                    <div class="portfolio-item img-zoom ct-photography ct-media ct-branding ct-Media">
+                        <div class="portfolio-item-wrap">
+                            <div class="portfolio-image">
+                                <a href="#"><img src="images/gallery/ugym.png" alt=""></a>
+                            </div>
+                            <div class="portfolio-description">
+                                <a href="portfolio-page-grid-gallery.html">
+                                    <h3>Stronger Every Day</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: portfolio item -->
+                    <!-- portfolio item -->
+                    <div class="portfolio-item img-zoom ct-photography ct-media ct-branding ct-Media">
+                        <div class="portfolio-item-wrap">
+                            <div class="portfolio-image">
+                                <a href="#"><img src="images/gym6.jpg" alt=""></a>
+                            </div>
+                            <div class="portfolio-description">
+                                <a href="portfolio-page-grid-gallery.html">
+                                    <h3>Level Up Your Training</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: portfolio item -->
+                </div>
+                <!-- end: Portfolio: Image Zoom -->
+            </div>
+        </section>
+        <!-- end: Content -->
+
+        {% include '_membership_builder.html' %}
+        <!-- Footer -->
+        <footer id="footer" style="background-color: #ffffff;">
+            <div class="copyright-content"
+                style="min-height: auto !important; padding: 15px 0 !important; background-color: #ffffff !important;">
+                <div class="container">
+                    <div class="copyright-text text-center" style="color: #1e2022; font-size: 12px; margin: 0;">&copy; 2026 MARS
+                        - All rights reserved.</div>
+                </div>
+            </div>
+        </footer>
+        <!-- end: Footer -->
+    </div>
+    <!--Plugins-->
+    <script src="js/jquery.js"></script>
+    <script src="js/plugins.js"></script>
+    <!--Template functions-->
+    <script src="js/functions.js"></script>
+</body>
+
+</html>
