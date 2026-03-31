@@ -57,3 +57,16 @@ SELECT * FROM membership_selections;
 
 SELECT id, name, surname, email, telephone
 FROM users;
+
+
+
+
+
+USE mars_gym;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE membership_selections;
+TRUNCATE TABLE users;
+
+SET FOREIGN_KEY_CHECKS = 1;

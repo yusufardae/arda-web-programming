@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is the account page.
+        I use it to show the current user's membership ID and also let the user
+        search membership details by entering an ID.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -17,7 +22,7 @@
 
 
 <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep the header text white here because the title area is dark. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -56,7 +61,7 @@
 <body>
     <!-- Body Inner -->
     <div class="body-inner">
-                <!-- Header -->
+        <!-- Reusable top navigation -->
         <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
             <div class="header-inner">
                 <div class="container">
@@ -88,7 +93,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Intro title for the account/membership lookup page -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="page-title">
@@ -97,15 +102,17 @@
             </div>
         </section>
         <!-- end: Page title -->
-        <!-- Section -->
+        <!-- Main account content -->
         <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 offset-3">
+                        <!-- Flash messages are shown here if the user enters an invalid ID -->
                         {% include '_flash_messages.html' %}
                         <h2 class="text-center">View Your Membership</h2>
                         <p class="text-muted text-center mb-0">Hello {{ current_user_name }} your id is {% if current_membership_code %}{{ current_membership_code }}{% else %}not generated yet{% endif %}</p>
                         <br><br><br>
+                        <!-- This form posts the membership code back to the same page for searching -->
                         <form class="form-validation" method="post">
                             <div class="form-group">
                                 <p class="center">To view your membership details, enter your id below.</p>
@@ -120,6 +127,7 @@
             </div>
         </section>
         <br>
+        <!-- If Flask finds a matching membership, I show the result below -->
         {% if membership_result %}
         <div class="container">
                 <div class="text-center">
@@ -144,7 +152,7 @@
     <!-- end: Body Inner -->
     <!-- Scroll top -->
     <a id="scrollTop"><i class="icon-chevron-up"></i><i class="icon-chevron-up"></i></a>
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

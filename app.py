@@ -1,3 +1,20 @@
+"""
+This file is the main Flask backend of my gym project.
+
+Imports I used here:
+- date from datetime: to calculate the user's age from date of birth
+- Decimal and ROUND_HALF_UP: to calculate money values more safely than normal floats
+- Path: to build file paths like the templates folder and .env path
+- os: to read environment variables such as database settings
+- secrets: to generate random membership IDs in a safer way
+- Flask tools: to create routes, render pages, read forms, use sessions and show messages
+- werkzeug security helpers: to hash passwords when registering and check them at login
+- pymysql: to connect the project to the MySQL database
+
+In short, this file controls the whole flow:
+home page -> register -> choose gym plan -> checkout -> membership ID -> login/account.
+"""
+
 from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
@@ -13,6 +30,7 @@ except ImportError:
     pymysql = None
 
 
+# I keep common paths and fixed values here so I can reuse them in the whole file.
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATE_DIR = BASE_DIR / 'templates'
 STATIC_DIR = BASE_DIR / 'templates'
@@ -23,6 +41,8 @@ MEMBERSHIP_CODE_PREFIXES = {
     'powerzone': 'PW',
 }
 
+# This big dictionary is basically the pricing table of the project.
+# It stores each club's name, discounts, joining fee, gym packages and extra services.
 MEMBERSHIP_PRICING = {
     'ugym': {
         'name': 'uGym',
@@ -114,14 +134,17 @@ MEMBERSHIP_PRICING = {
 
 
 def money(value):
+    # I round every money value to 2 decimals so prices stay consistent.
     return Decimal(str(value)).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
 
 def money_to_float(value):
+    # Templates and some calculations are easier to show with normal float values.
     return float(money(value))
 
 
 def load_env_file(env_path):
+    # This reads the local .env file manually and loads settings like DB host/user/password.
     if not env_path.exists():
         return
 
@@ -134,6 +157,7 @@ def load_env_file(env_path):
         os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
+# I load .env before creating the app config so custom settings are available.
 load_env_file(BASE_DIR / '.env')
 
 app = Flask(
@@ -143,6 +167,7 @@ app = Flask(
     static_url_path='',
 )
 
+# These values are used while connecting to MySQL and managing sessions.
 app.config.update(
     SECRET_KEY=os.getenv('SECRET_KEY', 'change-this-secret-key'),
     MYSQL_HOST=os.getenv('MYSQL_HOST', '127.0.0.1'),
@@ -154,6 +179,7 @@ app.config.update(
 
 
 def get_mysql_connection():
+    # All database operations use this helper so the connection settings stay in one place.
     if pymysql is None:
         raise RuntimeError(
             'PyMySQL is not installed. Run `pip install PyMySQL` in your virtual environment.'
@@ -172,6 +198,7 @@ def get_mysql_connection():
 
 
 def ensure_database_tables():
+    # I call this before DB actions to make sure the needed tables/columns already exist.
     connection = get_mysql_connection()
     try:
         with connection.cursor() as cursor:
@@ -249,6 +276,7 @@ def ensure_database_tables():
 
 
 def calculate_age(birth_date, on_date=None):
+    # This calculates age correctly by also checking if the birthday has happened this year.
     today = on_date or date.today()
     age = today.year - birth_date.year
 
@@ -259,6 +287,7 @@ def calculate_age(birth_date, on_date=None):
 
 
 def get_registration_redirect_endpoint(age):
+    # After registration, older users go to PowerZone and the others go to uGym.
     if age >= 66:
         return 'marspower'
 
@@ -266,6 +295,7 @@ def get_registration_redirect_endpoint(age):
 
 
 def validate_registration_form(form_data):
+    # Here I validate the registration form before writing anything into the database.
     required_fields = {
         'name': 'Name',
         'surname': 'Surname',
@@ -277,6 +307,7 @@ def validate_registration_form(form_data):
         'telephone': 'Telephone',
     }
 
+    # I strip text fields first so spaces do not count as valid input.
     cleaned_data = {field: form_data.get(field, '').strip() for field in required_fields}
     missing_fields = [label for field, label in required_fields.items() if not cleaned_data[field]]
     if missing_fields:
@@ -285,18 +316,21 @@ def validate_registration_form(form_data):
     if cleaned_data['password'] != cleaned_data['password2']:
         raise ValueError('Passwords do not match.')
 
+    # If the date format is wrong, registration should stop here.
     try:
         birth_date = date.fromisoformat(cleaned_data['dateofbirth'])
     except ValueError as exc:
         raise ValueError('Date of birth is invalid.') from exc
 
     age = calculate_age(birth_date)
+    # The project rule is that users under 16 cannot register.
     if age < 16:
         raise ValueError('Users under 16 cannot register.')
 
     if not form_data.get('terms_conditions'):
         raise ValueError('You must accept the Terms and Conditions to continue.')
 
+    # I return the cleaned version of the data so later functions can directly save it.
     return {
         'name': cleaned_data['name'],
         'surname': cleaned_data['surname'],
@@ -311,6 +345,7 @@ def validate_registration_form(form_data):
 
 
 def save_user(user_data):
+    # This inserts a new user into the users table and returns the new user id.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -349,6 +384,7 @@ def save_user(user_data):
 
 
 def get_user_by_email(email):
+    # I use this during login to find the correct user record.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -368,22 +404,26 @@ def get_user_by_email(email):
 
 
 def calculate_membership_pricing(club_key, age, form_data, require_selection=True):
+    # This is one of the main functions: it calculates the total membership price.
     club = MEMBERSHIP_PRICING[club_key]
     gym_access = form_data.get('gym_access', 'none')
     if gym_access not in club['gym_options']:
         raise ValueError('Please select a valid gym package.')
 
+    # These booleans tell me which extras the user selected.
     include_pool = bool(form_data.get('include_pool'))
     include_classes = bool(form_data.get('include_classes'))
     include_massage = bool(form_data.get('include_massage'))
     include_physiotherapy = bool(form_data.get('include_physiotherapy'))
     has_gym_membership = gym_access != 'none'
 
+    # If nothing is selected, I show an error instead of saving an empty membership.
     if require_selection and not any(
         [has_gym_membership, include_pool, include_classes, include_massage, include_physiotherapy]
     ):
         raise ValueError('Please select at least one membership or extra service.')
 
+    # Some extras are cheaper when the user already has a gym package, so I check both cases.
     gym_fee = club['gym_options'][gym_access]['price']
     pool_fee = (
         club['addons']['pool']['with_gym'] if include_pool and has_gym_membership
@@ -406,6 +446,7 @@ def calculate_membership_pricing(club_key, age, form_data, require_selection=Tru
         else ZERO_MONEY
     )
 
+    # Under-26 discount only applies to gym, pool and classes in this project.
     joining_fee = club['joining_fee']
     discount_rate = club['discount_rate_under_26'] if age <= 25 else ZERO_MONEY
     discountable_total = gym_fee + pool_fee + classes_fee
@@ -420,6 +461,7 @@ def calculate_membership_pricing(club_key, age, form_data, require_selection=Tru
         - discount_amount
     )
 
+    # I return all price details because later pages need a full breakdown, not just the total.
     return {
         'club': club_key,
         'club_name': club['name'],
@@ -444,6 +486,7 @@ def calculate_membership_pricing(club_key, age, form_data, require_selection=Tru
 
 
 def save_membership_selection(user_id, selection):
+    # This saves the user's chosen plan. If they already had one, it updates the same row.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -518,6 +561,7 @@ def save_membership_selection(user_id, selection):
 
 
 def get_membership_selection(user_id):
+    # This gets the saved membership information of the logged-in user.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -537,6 +581,7 @@ def get_membership_selection(user_id):
 
 
 def membership_code_exists(cursor, membership_code):
+    # Before creating a membership code, I check if it is already used.
     cursor.execute(
         '''
         SELECT id
@@ -549,12 +594,14 @@ def membership_code_exists(cursor, membership_code):
 
 
 def get_membership_code_prefix(club_key):
+    # Each club has its own prefix so the ID also shows which club it belongs to.
     if club_key not in MEMBERSHIP_CODE_PREFIXES:
         raise ValueError('A valid club could not be found for the membership ID.')
     return MEMBERSHIP_CODE_PREFIXES[club_key]
 
 
 def membership_code_matches_club(membership_code, club_key):
+    # This prevents a wrong prefix like PW being used for a uGym member.
     normalized_code = normalize_membership_code(membership_code)
     if not normalized_code:
         return False
@@ -562,6 +609,7 @@ def membership_code_matches_club(membership_code, club_key):
 
 
 def generate_unique_membership_code(cursor, club_key):
+    # I generate a random code and retry a few times until I get a unique one.
     prefix = get_membership_code_prefix(club_key)
     for _ in range(20):
         membership_code = f'{prefix}{secrets.randbelow(100_000_000):0{MEMBERSHIP_CODE_DIGITS}d}'
@@ -572,6 +620,7 @@ def generate_unique_membership_code(cursor, club_key):
 
 
 def ensure_membership_code_for_user(user_id):
+    # If the user already has a correct code, I keep it. Otherwise I create a new one.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -610,6 +659,7 @@ def ensure_membership_code_for_user(user_id):
 
 
 def normalize_membership_code(raw_value):
+    # This cleans the searched code and checks the expected format like UG12345678.
     cleaned = (raw_value or '').strip().replace('#', '').upper()
     if len(cleaned) != MEMBERSHIP_CODE_DIGITS + 2:
         return None
@@ -625,6 +675,7 @@ def normalize_membership_code(raw_value):
 
 
 def get_membership_by_code(membership_code):
+    # This is used on the account page to search a membership by its ID.
     ensure_database_tables()
 
     connection = get_mysql_connection()
@@ -645,6 +696,7 @@ def get_membership_by_code(membership_code):
 
 
 def build_membership_label(selection):
+    # I build a readable text label so the account/checkout page can show the chosen package nicely.
     club = MEMBERSHIP_PRICING.get(selection['club'], {})
     club_name = club.get('name', selection['club'])
     extras = []
@@ -673,6 +725,7 @@ def build_membership_label(selection):
 
 
 def build_club_context(club_key, age):
+    # This prepares all club data in a template-friendly way for the plan selection pages.
     club = MEMBERSHIP_PRICING[club_key]
     gym_options = [
         {
@@ -683,6 +736,7 @@ def build_club_context(club_key, age):
         for key, option in club['gym_options'].items()
     ]
     addon_items = []
+    # These rows are only for display, so the HTML page can print the pricing table easily.
     pricing_rows = [
         {
             'label': 'Joining fee (one-off fee)',
@@ -749,6 +803,7 @@ def build_club_context(club_key, age):
         ]
     )
 
+    # I also send live pricing data so the template/JS can update totals on the page.
     return {
         'key': club_key,
         'name': club['name'],
@@ -780,6 +835,7 @@ def build_club_context(club_key, age):
 
 
 def pricing_to_template(pricing):
+    # This converts Decimal values into simpler values that are easier to render in HTML.
     return {
         'club_name': pricing['club_name'],
         'gym_access': pricing['gym_access'],
@@ -802,6 +858,7 @@ def pricing_to_template(pricing):
 
 
 def build_checkout_context(selection):
+    # This creates the checkout summary list the user sees before finishing.
     club = MEMBERSHIP_PRICING[selection['club']]
     items = [
         {'label': 'Joining fee (one-off fee)', 'amount': money_to_float(selection['joining_fee'])}
@@ -826,6 +883,7 @@ def build_checkout_context(selection):
             {'label': 'Physiotherapy', 'amount': money_to_float(selection['physiotherapy_fee'])}
         )
 
+    # Subtotal is the sum before discount, then total_price is the final amount after discount.
     subtotal = sum(item['amount'] for item in items)
     return {
         'club_name': club['name'],
@@ -839,15 +897,18 @@ def build_checkout_context(selection):
 
 
 def render_membership_builder(club_key, template_name):
+    # I reuse the same logic for both clubs instead of writing two separate long route functions.
     user_id = session.get('user_id')
     user_age = session.get('user_age')
 
+    # If the user did not register yet, they should not access plan selection directly.
     if not user_id or user_age is None:
         flash('You must register before continuing.', 'danger')
         return redirect(url_for('joinus'))
 
     form_data = request.form.to_dict() if request.method == 'POST' else {}
 
+    # Even before form submit, I prepare a preview so the page can show prices immediately.
     try:
         price_preview = calculate_membership_pricing(
             club_key,
@@ -858,6 +919,7 @@ def render_membership_builder(club_key, template_name):
     except ValueError:
         price_preview = calculate_membership_pricing(club_key, int(user_age), {}, require_selection=False)
 
+    # On POST, the selected plan is validated and then saved to the database.
     if request.method == 'POST':
         try:
             selection = calculate_membership_pricing(club_key, int(user_age), request.form)
@@ -884,16 +946,19 @@ def render_membership_builder(club_key, template_name):
 
 @app.route('/')
 def index():
+    # Home page route.
     return render_template('index.html')
 
 
 @app.route('/joinus', methods=['GET', 'POST'])
 def joinus():
+    # This route handles both showing the registration form and submitting it.
     form_data = {}
 
     if request.method == 'POST':
         form_data = request.form.to_dict()
 
+        # If validation passes, I save the user and keep basic info in session.
         try:
             user_data = validate_registration_form(request.form)
             user_id = save_user(user_data)
@@ -928,6 +993,7 @@ def joinus():
             flash('An unexpected database error occurred during registration.', 'danger')
             return render_template('marsrgstr.html', form_data=form_data), 500
 
+        # After registration, the next page depends on age.
         flash('Registration completed successfully. You can now continue to gym selection.', 'success')
         return redirect(url_for(redirect_endpoint))
 
@@ -936,26 +1002,31 @@ def joinus():
 
 @app.route('/marsugym')
 def marsugym():
+    # Intro page for uGym.
     return render_template('marsrgstr3.html')
 
 
 @app.route('/marspower')
 def marspower():
+    # Intro page for PowerZone.
     return render_template('marsrgstr4.html')
 
 
 @app.route('/uGym', methods=['GET', 'POST'])
 def uGym():
+    # uGym plan selection page.
     return render_membership_builder('ugym', 'marsplan3.html')
 
 
 @app.route('/PowerZone', methods=['GET', 'POST'])
 def PowerZone():
+    # PowerZone plan selection page.
     return render_membership_builder('powerzone', 'marsplan4.html')
 
 
 @app.route('/checkout')
 def checkout():
+    # This page shows the final price breakdown before payment is completed.
     user_id = session.get('user_id')
     if not user_id:
         flash('You need to register before checkout.', 'danger')
@@ -974,6 +1045,7 @@ def checkout():
 
 @app.route('/checkoutcomplete')
 def checkoutcomplete():
+    # After checkout, I generate/show the membership ID and selected package summary.
     user_id = session.get('user_id')
     if not user_id:
         flash('You need to reach the payment-complete step before viewing your membership ID.', 'danger')
@@ -1003,6 +1075,7 @@ def checkoutcomplete():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # This route logs the user in by checking email and hashed password.
     form_data = {}
 
     if request.method == 'POST':
@@ -1031,6 +1104,7 @@ def login():
             flash('An unexpected database error occurred during login.', 'danger')
             return render_template('marslogin.html', form_data=form_data), 500
 
+        # Passwords are not stored as plain text, so I compare with the hash here.
         if not user or not check_password_hash(user['password_hash'], password):
             flash('Email or password is incorrect.', 'danger')
             return render_template('marslogin.html', form_data=form_data), 401
@@ -1043,6 +1117,7 @@ def login():
         session['user_name'] = user.get('name', 'USER')
         session['user_age'] = calculate_age(birth_date) if birth_date else None
 
+        # If the user already chose a membership before, I reload it into the session.
         try:
             selection = get_membership_selection(user['id'])
         except Exception:
@@ -1080,6 +1155,7 @@ def login():
 
 @app.route('/account', methods=['GET', 'POST'])
 def account():
+    # On the account page, the user can see their info and also search membership IDs.
     current_user_name = session.get('user_name', 'USER')
     current_membership_code = session.get('membership_code')
     membership_result = None
@@ -1099,6 +1175,7 @@ def account():
                 except Exception:
                     app.logger.exception('Membership ID could not be refreshed on the account page.')
 
+    # When the search form is submitted, I normalize the code first and then query the DB.
     if request.method == 'POST':
         searched_membership_code = request.form.get('membership_code', '')
         normalized_code = normalize_membership_code(searched_membership_code)
@@ -1124,4 +1201,5 @@ def account():
 
 
 if __name__ == '__main__':
+    # I run the app in debug mode while developing the project locally.
     app.run(debug=True, port=5001)

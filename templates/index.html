@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is my landing page.
+        I use it to introduce the gym brand, show a strong first screen with a video,
+        and guide the user to login or registration.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -18,7 +23,7 @@
 <body>
     <!-- Body Inner -->
     <div class="body-inner">
-        <!-- Header -->
+        <!-- Main header with logo and navigation links -->
         <header id="header" data-transparent="true" class="dark">
             <div class="header-inner">
                 <div class="container">
@@ -26,7 +31,7 @@
                     <div id="logo"> <a href="{{ url_for('index') }}"><span class="logo-default">MARS</span><span
                                 class="logo-dark">MARS</span></a> </div>
                     <!--End: Logo-->
-                    <!-- Search -->
+                    <!-- This search block belongs to the original theme, so I kept it for layout consistency -->
                     <div id="search"><a id="btn-search-close" class="btn-search-close" aria-label="Close search form"><i
                                 class="icon-x"></i></a>
                         <form class="search-form" action="search-results-page.html" method="get">
@@ -55,7 +60,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Inspiro Slider -->
+        <!-- Full-screen hero area with background video and the main join button -->
         <div id="slider" class="inspiro-slider slider-fullscreen dots-creative" data-height-xs="360">
             <!-- Slide 1 -->
             <div class="slide kenburns" data-bg-video="video/Organic_macfit_kaybetmek_yok_64sn_1920_1080_Clean_CUT.mov">
@@ -71,9 +76,9 @@
         
                 </div>
             </div>
-            <!-- end: Slide 1 bu-->
+            <!-- End of the main hero slide -->
         </div>  
-        <!-- Footer -->
+        <!-- Simple footer used at the bottom of the page -->
         <footer id="footer" style="background-color: #1e2022;">
             <div class="copyright-content" style="min-height: auto !important; padding: 15px 0 !important; background-color: #1e2022 !important;">
                 <div class="container">
@@ -84,7 +89,7 @@
         <!-- end: Footer -->
     </div>
     <!-- end: Body Inner -->
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

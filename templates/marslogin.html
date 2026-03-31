@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is my login page.
+        The user enters email and password here, and Flask checks them against
+        the saved account in the database.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -16,7 +21,7 @@
 </head>
 
 <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep the header text white here because the title area is dark. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -56,7 +61,7 @@
 <body>
     <!-- Body Inner -->
     <div class="body-inner">
-        <!-- Header -->
+        <!-- Reusable top navigation -->
         <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
             <div class="header-inner">
                 <div class="container">
@@ -88,7 +93,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Intro title for the login step -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="page-title">
@@ -106,7 +111,7 @@
             </div>
         </section>
         <!-- end: Page title -->
-        <!-- Section -->
+        <!-- Main login form section -->
         <section>
             <div class="container-fluid d-flex flex-column">
                 <div class="row align-items-center">
@@ -115,8 +120,10 @@
                             <h6 class="h3 mb-1">Login</h6>
                             <p class="text-muted mb-0">Sign in to your account to continue.</p>
                         </div>
+                        <!-- Flask success/error messages are shown here -->
                         {% include '_flash_messages.html' %}
                         <span class="clearfix"></span>
+                        <!-- This form submits login data to the Flask /login route -->
                         <form class="form-validate" method="post" action="{{ url_for('login') }}">
                             <div class="form-group">
                                 <label for="email">Email address</label>
@@ -136,6 +143,7 @@
                                 <button style="background-color: #f70a0a;border-color: #f70a0a;" type="submit" class="btn btn-primary btn-block btn-primary">Sign in</button>
                             </div>
                         </form>
+                        <!-- Quick link for new users who need to register first -->
                         <div class="mt-4 text-center"><small>Not registered?</small> <a href="{{ url_for('joinus') }}" style="color: #f70a0a;" class="small fw-bold">Create account</a>
                         </div>
                     </div>
@@ -156,7 +164,7 @@
         <!-- end: Footer -->
     </div>
     <!-- end: Body Inner -->
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

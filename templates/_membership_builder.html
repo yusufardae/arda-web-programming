@@ -1,3 +1,8 @@
+<!--
+    This is the reusable membership builder partial.
+    I include it in both plan pages so the same form, summary card and JavaScript
+    can work with either club's pricing data.
+-->
 <style>
     .membership-table th,
     .membership-table td {
@@ -52,15 +57,21 @@
 
 <section id="content">
     <div class="container">
+        <!-- Flash messages appear here if the backend returns an error -->
         {% include '_flash_messages.html' %}
 
         <div class="heading-text heading-line text-center pb-4">
             <h4>Membership Plans</h4>
+            <!-- This explanation text is prepared in Flask and changes by club and age -->
             <p style="max-width: 760px; margin: 0 auto;">{{ club.discount_copy }}</p>
         </div>
 
 
 
+        <!--
+            The form posts the selection to Flask.
+            I also send pricing data to JavaScript with data-* attributes so the total updates live.
+        -->
         <form method="post" id="membership-builder" data-age="{{ user_age }}" data-catalog='{{ club.live_pricing | tojson }}'>
             <div class="row g-4 align-items-start">
                 <div class="col-lg-7">
@@ -101,6 +112,7 @@
                 </div>
 
                 <div class="col-lg-5">
+                    <!-- Sticky summary card so the user always sees the current price -->
                     <div class="card" style="position: sticky; top: 24px;">
                         <div class="card-body p-4">
                             <span class="badge badge-danger mb-3" style="background-color: #f70a0a;">
@@ -159,11 +171,13 @@
 
 <script>
     (function () {
+        // I use an IIFE so these helper functions stay local to this component.
         const builder = document.getElementById('membership-builder');
         if (!builder) {
             return;
         }
 
+        // Flask sends the pricing catalog as JSON inside the form element.
         const catalog = JSON.parse(builder.dataset.catalog);
         const age = Number(builder.dataset.age || 0);
         const summaryFields = {
@@ -180,6 +194,7 @@
         };
 
         function formatMoney(value) {
+            // This keeps every amount in a simple pound format.
             return `£${Number(value).toFixed(2)}`;
         }
 
@@ -199,6 +214,7 @@
         }
 
         function getAddonPrice(key, hasGymMembership) {
+            // Some extras have a different price depending on gym membership.
             if (!isChecked(`include_${key}`)) {
                 return 0;
             }
@@ -207,6 +223,7 @@
         }
 
         function updateSummary() {
+            // Every time the user changes an option, I recalculate the visible total here.
             const joiningFee = catalog.joining_fee;
             const gymAccess = getCheckedRadioValue();
             const gymLabel = getCheckedRadioLabel();
@@ -237,6 +254,7 @@
             summaryFields.total.textContent = formatMoney(total);
         }
 
+        // Run once at the start, then again whenever the user changes the form.
         builder.addEventListener('change', updateSummary);
         updateSummary();
     }());

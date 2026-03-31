@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is the main plan page for PowerZone.
+        The layout is similar to the uGym page, but the route sends different club data
+        into the same reusable membership builder partial.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -18,7 +23,7 @@
 </head>
 
     <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep the top menu text white because the page-title background is dark. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -89,7 +94,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Page title for the membership selection step -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="breadcrumb">
@@ -105,15 +110,16 @@
         </section>
         <!-- end: Page title -->
 
+        <!-- Small welcome line for the selected club -->
         <div class="heading-text text-center">
                     <h4 style="padding-top: 140px;">Wellcome To PowerZone</h4>
                 </div>
 
-        <!-- Content -->
+        <!-- Intro gallery section -->
         <section id="page-content">
             <div class="container">
                 <hr class="space">
-                    <!-- Portfolio: Image Zoom -->
+                    <!-- These cards are mostly visual and help introduce the club atmosphere -->
                 <div class="portfolio-3-columns">
                     <!-- portfolio item -->
                     <div class="portfolio-item img-zoom ct-photography ct-media ct-branding ct-Media">
@@ -163,6 +169,7 @@
         </section>
         <!-- end: Content -->
 
+        <!-- Shared membership builder partial used by both club pages -->
         {% include '_membership_builder.html' %}
         <!-- Footer -->
         <footer id="footer" style="background-color: #ffffff;">
@@ -176,7 +183,7 @@
         </footer>
         <!-- end: Footer -->
     </div>
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

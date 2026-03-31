@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is my checkout page.
+        It shows the final membership breakdown, the subtotal, discount information,
+        and a simple payment step before the membership is completed.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -17,7 +22,7 @@
 
 
 <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep the header text white here because the title area is dark. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -57,7 +62,7 @@
 <body>
     <!-- Body Inner -->
     <div class="body-inner">
-        <!-- Header -->
+        <!-- Reusable top navigation -->
         <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
             <div class="header-inner">
                 <div class="container">
@@ -89,7 +94,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Intro title for the payment step -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="breadcrumb">
@@ -104,7 +109,7 @@
             </div>
         </section>
         <!-- end: Page title -->
-        <!-- SHOP CHECKOUT -->
+        <!-- Main checkout content -->
         <section id="shop-checkout">
             <div class="container">
                 <div class="row">
@@ -115,6 +120,7 @@
                                 <h4 class="mb-3">{{ checkout.club_name }} Membership</h4>
                                 <p class="text-muted mb-4">Your latest membership choices have been saved to the database. The same final total will be used for payment.</p>
 
+                                <!-- Flask sends the saved price lines, and I print them with a loop -->
                                 {% for item in checkout.line_items %}
                                 <div class="d-flex justify-content-between py-2 border-bottom">
                                     <span>{{ item.label }}</span>
@@ -127,6 +133,7 @@
                                     <strong>£{{ '%.2f' | format(checkout.subtotal) }}</strong>
                                 </div>
 
+                                <!-- This message changes depending on whether the age discount was applied -->
                                 {% if checkout.has_discount %}
                                 <div class="alert alert-success mb-0" role="alert">
                                     Age discount applied: {{ checkout.discount_rate_percent }}% off eligible membership items.
@@ -144,6 +151,7 @@
                                 <span class="text-muted text-sm font-italic">Step 2 of 2</span>
                                 <h4 class="mb-4">Payment method</h4>
 
+                                <!-- Payment method cards are visual here and support the checkout layout -->
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-check image-checkbox p-2 border rounded">
@@ -187,6 +195,7 @@
                                     <strong>{{ checkout.club_name }}</strong>
                                 </div>
 
+                                <!-- Order summary repeats the same backend data in a compact sidebar -->
                                 {% for item in checkout.line_items %}
                                 <div class="d-flex justify-content-between py-2 border-bottom">
                                     <span>{{ item.label }}</span>
@@ -213,6 +222,7 @@
                                     <small class="text-muted">Joining fee and all selected extras are already included in this amount.</small>
                                 </div>
 
+                                <!-- This button continues to the completion page after the checkout step -->
                                 <a href="{{ url_for('checkoutcomplete') }}">
                                 <button style="background-color: #f70a0a; border-color: #f70a0a;" type="submit" class="btn btn-primary btn-block mt-4">Pay</button>
                                 </a>
@@ -236,7 +246,7 @@
         <!-- end: Footer -->
     </div>
     <!-- end: Body Inner -->
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

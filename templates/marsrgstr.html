@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This is my registration page.
+        The user creates an account here before choosing a club and membership plan.
+        Jinja is used to refill old values if the backend sends the form back with an error.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -18,7 +23,7 @@
 </head>
 
     <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep the header text white here because the page-title area is dark. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -38,7 +43,7 @@
 <body>
     <!-- Body Inner -->
     <div class="body-inner">
-        <!-- Header -->
+        <!-- Reusable top navigation -->
         <header id="header" class="header-disable-fixed" data-fullwidth="true" data-transparent="true">
             <div class="header-inner">
                 <div class="container">
@@ -71,7 +76,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Intro area so the user knows this is the registration step -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="breadcrumb">
@@ -86,7 +91,7 @@
             </div>
         </section>
         <!-- end: Page title -->
-        <!-- Section -->
+        <!-- Main registration form -->
         <section class="pt-5 pb-5">
             <div class="container-fluid d-flex flex-column">
                 <div class="row align-items-center min-vh-100">
@@ -94,8 +99,10 @@
                         <h3>Register New Account</h3>
                         <p>Create an account by entering the information below. If you are a returning customer please login at the top of the page.</p>
 
+                        <!-- Flask messages are shown here if validation or database errors happen -->
                         {% include '_flash_messages.html' %}
 
+                        <!-- This form sends all registration data to the Flask /joinus route -->
                         <form id="form1" class="form-validate mt-5" action="{{ url_for('joinus') }}" method="post">
                             <div class="h5 mb-4">Account details</div>
                             <div class="row">
@@ -154,6 +161,7 @@
                             </div>
                             <button type="submit" class="btn m-t-30 mt-3">Submit</button>
                         </form>
+                        <!-- Small shortcut for users who already have an account -->
                         <div class="mt-4"><small>Already have an acocunt?</small> <a href="{{ url_for('login') }}" class="small fw-bold" style="color: #f70a0a !important;">Sign in</a>
                         </div>
                     </div>

@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <!--
+        This page is another version of the gym comparison screen.
+        In my backend, some users are redirected here first depending on their age,
+        but I still let them see both clubs before continuing.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="INSPIRO" />
@@ -18,7 +23,7 @@
 </head>
 
     <style>
-    /* Force only logo text + main menu links to be white on this page */
+    /* I keep these header links white so they stay readable on the dark background. */
     #header #logo .logo-default,
     #header #logo .logo-dark,
     #header #mainMenu nav>ul>li>a {
@@ -70,7 +75,7 @@
             </div>
         </header>
         <!-- end: Header -->
-        <!-- Page title -->
+        <!-- Intro banner for the gym selection step -->
         <section id="page-title" class="text-light background-theme">
             <div class="container">
                 <div class="breadcrumb">
@@ -87,7 +92,7 @@
         <!-- end: Page title -->
         <!-- Content -->
 
-        <!-- Stats -->
+        <!-- Small stat cards for presentation and brand feeling -->
         <section style="padding: 30px 0 !important;">
             <div class="container">
                 <div class="row justify-content-md-center">
@@ -120,7 +125,7 @@
         </section>
         <!-- end: Stats -->
 
-        <!-- Content -->
+        <!-- First club card on this version of the page -->
         <section id="page-content" class="p-b-0">
             <div class="container">
                 <div class="row m-b-40">
@@ -151,9 +156,7 @@
                 </div>
             </div>
         </section>
-        <!-- end: Content -->
-
-        <!-- end: Content -->
+        <!-- Second club card so the user can still compare both options -->
         <section id="page-content" class="p-b-0">
             <div class="container">
                 <div class="row m-b-40">
@@ -197,7 +200,7 @@
         <!-- end: Footer -->
     </div>
 
-    <!--Plugins-->
+    <!-- Theme JavaScript files -->
     <script src="js/jquery.js"></script>
     <script src="js/plugins.js"></script>
     <!--Template functions-->

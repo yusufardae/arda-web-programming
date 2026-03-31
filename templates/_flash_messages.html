@@ -1,3 +1,7 @@
+<!--
+    This partial shows Flask flash messages.
+    I include it on several pages so success and error boxes look consistent everywhere.
+-->
 <style>
     .mars-flash-stack {
         display: grid;
@@ -32,8 +36,10 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
+<!-- If Flask has messages, I print them here one by one -->
 <div class="mars-flash-stack">
     {% for category, message in messages %}
+    <!-- The category changes the color style of the message box -->
     <div class="mars-flash mars-flash-{{ 'success' if category == 'success' else 'danger' }}" role="alert">
         {{ message }}
     </div>
